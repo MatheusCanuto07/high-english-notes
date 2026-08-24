@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "English Notes MVP",
+  "description": "Sublinhe palavras e frases em inglês e salve anotações locais.",
+  "version": "0.1.0",
+  "permissions": ["storage"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}
