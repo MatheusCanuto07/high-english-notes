@@ -4,6 +4,10 @@
   "description": "Sublinhe palavras e frases em inglês e salve anotações locais.",
   "version": "0.1.0",
   "permissions": ["storage"],
+  "action": {
+    "default_title": "English Notes",
+    "default_popup": "popup.html"
+  },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],

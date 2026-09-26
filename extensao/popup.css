@@ -1,0 +1,194 @@
+:root {
+  color-scheme: light;
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --text: #111827;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --accent: #f59e0b;
+  --accent-soft: rgba(245, 158, 11, 0.12);
+  --focus: #2563eb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  width: 360px;
+  max-height: 480px;
+  margin: 0;
+  padding: 12px;
+  overflow: hidden;
+  color: var(--text);
+  background: var(--bg);
+  font: 14px/1.4 Arial, Helvetica, sans-serif;
+}
+
+.popup-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.popup-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.popup-count {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.popup-search {
+  margin-bottom: 10px;
+}
+
+.popup-search input {
+  width: 100%;
+  min-height: 36px;
+  padding: 8px 10px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font: 14px/1.4 Arial, Helvetica, sans-serif;
+  outline: none;
+}
+
+.popup-search input:focus,
+.add-form input:focus,
+.add-form textarea:focus {
+  border-color: var(--focus);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.18);
+}
+
+.popup-button {
+  min-width: 78px;
+  min-height: 34px;
+  padding: 7px 12px;
+  color: #ffffff;
+  background: #2563eb;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  font: 600 13px/1 Arial, Helvetica, sans-serif;
+}
+
+.popup-button:hover {
+  background: #1d4ed8;
+}
+
+.popup-button:active {
+  background: #1e40af;
+}
+
+.popup-button--full {
+  display: block;
+  width: 100%;
+  min-height: 36px;
+  margin-top: 8px;
+}
+
+.popup-button--secondary {
+  color: #374151;
+  background: #e5e7eb;
+}
+
+.popup-button--secondary:hover {
+  background: #d1d5db;
+}
+
+.popup-button--secondary:active {
+  background: #9ca3af;
+}
+
+.add-form input,
+.add-form textarea {
+  display: block;
+  width: 100%;
+  padding: 8px 10px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font: 14px/1.4 Arial, Helvetica, sans-serif;
+  outline: none;
+}
+
+.add-form input {
+  min-height: 36px;
+}
+
+.add-form textarea {
+  min-height: 150px;
+  margin-top: 8px;
+  resize: none;
+}
+
+.add-form__actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.notes-list {
+  max-height: 360px;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  list-style: none;
+}
+
+.note-item {
+  padding: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.note-item + .note-item {
+  margin-top: 8px;
+}
+
+.note-item__text {
+  margin: 0 0 4px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  background: var(--accent-soft);
+  border-radius: 2px;
+}
+
+.note-item__annotation {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.note-item__annotation--empty {
+  font-style: italic;
+}
+
+.empty-state {
+  margin: 24px 8px;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+[hidden] {
+  display: none;
+}

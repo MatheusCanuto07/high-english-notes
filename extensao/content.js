@@ -29,6 +29,7 @@
   let activeRange = null;
   let pendingSelection = null;
   let saveTimer = null;
+  let rescanTimer = null;
   let closePopoverTimer = null;
 
   init();
@@ -40,6 +41,7 @@
     document.addEventListener("mouseup", handleSelectionMouseup, true);
     document.addEventListener("keydown", handleKeydown, true);
     document.addEventListener("click", handleDocumentClick, true);
+    chrome.storage.onChanged.addListener(handleStorageChange);
 
     const observer = new MutationObserver(scheduleHighlightSavedNotes);
     observer.observe(document.body || document.documentElement, {
@@ -60,6 +62,31 @@
     return new Promise((resolve) => {
       chrome.storage.local.set({ [STORAGE_KEY]: notes }, resolve);
     });
+  }
+
+  function handleStorageChange(changes, areaName) {
+    if (areaName !== "local" || !changes[STORAGE_KEY]) {
+      return;
+    }
+
+    const nextNotes = changes[STORAGE_KEY].newValue || {};
+    for (const text of Object.keys(notes)) {
+      if (!nextNotes[text]) {
+        removeHighlightsForText(text);
+      }
+    }
+
+    notes = nextNotes;
+    scheduleFullRescan();
+  }
+
+  function findNoteKey(text) {
+    if (notes[text]) {
+      return text;
+    }
+
+    const lowerText = text.toLowerCase();
+    return Object.keys(notes).find((key) => key.toLowerCase() === lowerText) || null;
   }
 
   function handleSelectionMouseup(event) {
@@ -164,7 +191,8 @@
       return;
     }
 
-    const { text, range } = pendingSelection;
+    const { range } = pendingSelection;
+    const text = findNoteKey(pendingSelection.text) || pendingSelection.text;
     const highlight = wrapRange(range, text);
     if (!highlight) {
       closeAddButton();
@@ -333,10 +361,22 @@
     saveTimer = window.setTimeout(highlightSavedNotes, 250);
   }
 
+  function scheduleFullRescan() {
+    window.clearTimeout(rescanTimer);
+    rescanTimer = window.setTimeout(() => {
+      if (!popover) {
+        removeAllHighlights();
+      }
+
+      highlightSavedNotes();
+    }, 250);
+  }
+
   function highlightSavedNotes() {
     const savedTexts = Object.keys(notes)
       .filter(Boolean)
-      .sort((a, b) => b.length - a.length);
+      .sort((a, b) => b.length - a.length)
+      .map((text) => ({ text, lower: text.toLowerCase() }));
 
     if (savedTexts.length === 0 || !document.body) {
       return;
@@ -404,8 +444,11 @@
     while (index < value.length) {
       let found = null;
 
-      for (const text of savedTexts) {
-        if (value.startsWith(text, index) && hasExactTextBoundaries(value, index, text)) {
+      for (const { text, lower } of savedTexts) {
+        if (
+          value.substr(index, text.length).toLowerCase() === lower &&
+          hasExactTextBoundaries(value, index, text)
+        ) {
           found = text;
           break;
         }
@@ -475,10 +518,28 @@
         continue;
       }
 
-      const textNode = document.createTextNode(highlight.textContent || "");
-      highlight.replaceWith(textNode);
-      textNode.parentNode?.normalize();
+      unwrapHighlight(highlight);
     }
+  }
+
+  function removeAllHighlights() {
+    const highlights = Array.from(document.querySelectorAll(`.${HIGHLIGHT_CLASS}`));
+    for (const highlight of highlights) {
+      unwrapHighlight(highlight);
+    }
+  }
+
+  function unwrapHighlight(highlight) {
+    const parent = highlight.parentNode;
+    if (!parent) {
+      return;
+    }
+
+    while (highlight.firstChild) {
+      parent.insertBefore(highlight.firstChild, highlight);
+    }
+    highlight.remove();
+    parent.normalize();
   }
 
   function canUseRange(range) {

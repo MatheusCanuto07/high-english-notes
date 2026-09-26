@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>English Notes</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <section id="list-view">
+      <header class="popup-header">
+        <h1 class="popup-title">English Notes</h1>
+        <p class="popup-count" id="notes-count"></p>
+      </header>
+
+      <div class="popup-search">
+        <input
+          id="search-input"
+          type="search"
+          placeholder="Buscar palavra ou anotação"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button class="popup-button popup-button--full" id="open-add-button" type="button">
+          Adicionar palavra
+        </button>
+      </div>
+
+      <ul class="notes-list" id="notes-list"></ul>
+      <p class="empty-state" id="empty-state" hidden></p>
+    </section>
+
+    <section id="add-view" hidden>
+      <header class="popup-header">
+        <h1 class="popup-title">Nova palavra</h1>
+      </header>
+
+      <form class="add-form" id="add-form">
+        <input
+          id="add-text-input"
+          type="text"
+          maxlength="200"
+          placeholder="Palavra ou frase"
+          autocomplete="off"
+          spellcheck="false"
+          required
+        />
+        <textarea
+          id="add-annotation-input"
+          maxlength="500"
+          placeholder="Digite sua anotação"
+        ></textarea>
+        <div class="add-form__actions">
+          <button class="popup-button popup-button--secondary" id="cancel-add-button" type="button">
+            Cancelar
+          </button>
+          <button class="popup-button" type="submit">Enviar</button>
+        </div>
+      </form>
+    </section>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
