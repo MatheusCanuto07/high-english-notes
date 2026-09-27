@@ -258,7 +258,23 @@
 
     document.documentElement.appendChild(popover);
     positionPopover(anchorRect);
-    textarea.focus();
+    focusTextarea(textarea);
+  }
+
+  function focusTextarea(textarea) {
+    const applyFocus = () => {
+      if (!textarea.isConnected || document.activeElement === textarea) {
+        return;
+      }
+
+      textarea.focus({ preventScroll: true });
+      const end = textarea.value.length;
+      textarea.setSelectionRange(end, end);
+    };
+
+    applyFocus();
+    window.requestAnimationFrame(applyFocus);
+    window.setTimeout(applyFocus, 50);
   }
 
   async function saveAnnotation(text, annotation) {
